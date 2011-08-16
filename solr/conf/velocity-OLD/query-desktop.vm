@@ -1,0 +1,73 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+      <div class="pagepath"> <a href="http://tipitaka.org">Home</a> &gt; Search</div>
+      <h1 class="contenttitle">Tipitaka Search</h1>
+<p>
+      <table id="tablecenter"> 
+        <tbody> 
+          <tr> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#257;') " value=" &#257; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#7693;') " value=" &#7693; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#299;') " value=" &#299; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#7735;') " value=" &#7735; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#7747;') " value=" &#7747; " type="button"></td> 
+          </tr> 
+          <tr> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#7749;') " value=" &#7749; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#7751;') " value=" &#7751; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#241;') " value=" &#241; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#7789;') " value=" &#7789; " type="button"></td> 
+            <td ><input style="font-size: 100%;" onclick="insertchar('&#363;') " value=" &#363; " type="button"></td> 
+          </tr> 
+        </tbody> 
+      </table> 
+<br/>Click on the buttons above to enter P&#257;&#7735;i characters into the search box below.<br/><br/>
+  <form id="query-form" action="#{url_for_desktop}" method="GET" name="googleform">
+    <div class="inputs">
+      <span #annTitle("Add the query using the &q= parameter")>Find: <input type="text" id="q" name="q" class="inputtext" value="$!esc.html($params.get('q'))"/> <input type="submit" id="querySubmit"/></span>
+  </div>
+    #if($request.params.get('debugQuery'))
+      <input type="hidden" name="debugQuery" value="true"/>
+    #end
+    #if($annotate == true)
+      <input type="hidden" name="annotateBrowse" value="true"/>
+    #end
+    #foreach($fq in $request.params.getParams('fq'))
+      #if ($fq != "{!bbox}")
+        <input type="hidden" name="fq" id="allFQs" value="$esc.html($fq)"/>
+      #end
+    #end
+    
+    #set( $depth = "#find_tree_depth_desktop($request.params.getParams('fq'))")
+    #if($depth != '')
+        <input type="hidden" name="facet.field" value="$depth"/>
+    #end
+    <div class="constraints" #annTitle("Lists out the &fq filters.  Click to remove.")>
+      #breadcrumbs_desktop($params)
+    </div>
+     #if($request.params.get('debugQuery'))
+        <a href="#" onclick='jQuery(this).siblings("pre").toggle(); return false;'>toggle parsed query</a>
+        <pre style="display:none">$response.response.debug.parsedquery</pre>
+      #end
+      #set($queryOpts = $request.params.get("queryOpts"))
+      #if($queryOpts && $queryOpts != "")
+        <input type="hidden" name="queryOpts" value="$queryOpts"/>
+      #end
+  </form>
+</p>
+

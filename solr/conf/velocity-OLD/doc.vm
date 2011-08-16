@@ -1,0 +1,43 @@
+#set($display_text = "#field('text')")
+#if($display_text.length() > 200)
+  #set($display_text_length = 200)
+#else
+  #set($display_text_length = $display_text.length())
+#end
+<div><a href="http://tipitaka.org/$doc.getFieldValue('script')/$doc.getFieldValue('path')" target="_blank">#field('volume')#field('pitaka')#field('book')#field('chapter')#field('section')</a></div>
+<div>$display_text.substring(0,$display_text_length)</div>
+<div class="mlt">
+  #set($mlt = $mltResults.get($docId))
+  #set($mltOn = $params.getBool('mlt'))
+  #if($mltOn == true)<div class="field-name">Similar Items</div>#end
+  #if ($mltOn && $mlt && $mlt.size() > 0)
+  <ul>
+    #foreach($mltHit in $mlt)
+      #set($mltId = $mltHit.getFieldValue('id'))
+      <li><div><a href="#url_for_home?q=id:$mltId">$mltId</a></div><div><span class="field-name">Name:</span> $mltHit.getFieldValue('name')</div>
+        <div>$mltHit.getFieldValue('path')</div>
+
+      </li>
+    #end
+  </ul>
+  #elseif($mltOn && $mlt.size() == 0)
+    <div>No Similar Items Found</div>
+  #end
+</div>
+#if($params.getBool("debugQuery",false))
+  <a href="#" onclick='jQuery(this).siblings("pre").toggle(); return false;'>toggle explain</a>
+  <pre style="display:none">$response.getExplainMap().get($doc.getFirstValue('id'))</pre>
+  <a href="#" onclick='jQuery(this).siblings("pre2").toggle(); return false;'>toggle all fields</a>
+  <pre2 style="display:none">
+  #foreach($fieldname in $doc.fieldNames)
+     <br>
+       <span class="field-name">$fieldname :</span>
+       <span>
+       #foreach($value in $doc.getFieldValues($fieldname))
+         $value
+       #end
+       </span>
+  #end
+   </br>
+  </pre2>
+#end

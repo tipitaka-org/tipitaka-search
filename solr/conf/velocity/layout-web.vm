@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head> 
+<link rel="icon" type="image/ico" href="http://tipitaka.org/favicon.ico">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- Meta information for search engines -->
+<meta name="name" content="Tipitaka Search" />
+<meta name="description" content="Search the Tipitaka" />
+<!-- Site stylesheet (site colors and layout definitions) -->
+<link rel="stylesheet" media="screen" type="text/css" href="http://tipitaka.org/screen.css" />
+<link rel="stylesheet" media="print" type="text/css" href="http://tipitaka.org/print.css" />
+<title>Tipitaka Search</title>
+
+<script language="javascript"> 
+function insertchar(thechar)
+{
+document.googleform.q.value=document.googleform.q.value+thechar; document.googleform.q.focus();
+}
+</script> 
+
+<script type="text/javascript" src="#{url_for_solr}/admin/jquery-1.4.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="#{url_for_solr}/admin/file?file=/velocity/main-web.css&contentType=text/css"/>
+<link rel="stylesheet" href="#{url_for_solr}/admin/file?file=/velocity/jquery.autocomplete.css&contentType=text/css" type="text/css" />
+<script type="text/javascript" src="#{url_for_solr}/admin/file?file=/velocity/jquery.autocomplete.js&contentType=text/javascript"></script>
+
+
+    <script>
+    $(document).ready(function(){
+      $("\#q").autocomplete('#{url_for_solr}/terms', {  ## backslash escaped #q as that is a macro defined in VM_global_library.vm
+           extraParams:{
+             'terms.prefix': function() { return $("\#q").val();},
+             'terms.sort': 'count',
+             'terms.fl': 'text',
+             'wt': 'velocity',
+             'v.template': 'suggest'
+           }
+         }
+      );
+
+      // http://localhost:8983/solr/terms?terms.fl=name&terms.prefix=i&terms.sort=count
+    });
+
+    </script>
+</head> 
+<body> 
+<!-- Page header --> 
+<div id="header"><br />
+  &nbsp;&nbsp;&nbsp;<img src="http://tipitaka.org/images/aniwheel2.gif" /><a name="top" id="top"></a></div> 
+<div id="mainwrapper"> 
+  <!-- Page content --> 
+  <div id="container"> 
+    <div class="content-sati"> 
+
+$content
+
+    </div> 
+    <!-- End content --> 
+  </div> 
+  <!-- End container --> 
+  <div class="clearing"></div> 
+</div> 
+<!-- End mainwrapper --> 
+<!-- Page footer --> 
+<!--/includes/footer.ssi START--> 
+<div id="footer"> 
+  <div id="copyrights"> 
+    <hr width="60%" size="2px"/> 
+    <small> 
+    	<a href="mailto:help@tipitaka.org">Contact the Webmaster</a><br /> 
+    </small> 
+  </div> 
+</div> 
+<!--/includes/footer.ssi END--> 
+ 
+</body> 
+</html> 

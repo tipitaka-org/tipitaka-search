@@ -1,0 +1,81 @@
+  <!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="icon" type="image/ico" href="http://tipitaka.org/favicon.ico">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" name="viewport" />
+<link href="http://www.tipitaka.org/ios/css/style.css" rel="stylesheet" media="screen" type="text/css" />
+<script src="http://www.tipitaka.org/ios/javascript/functions.js" type="text/javascript"></script>
+<title>P&#257;&#7735;i Tipi&#7789;aka</title>
+<meta content="Buddha,P&#257;&#7735;i Tipi&#7789;aka" name="keywords" />
+<meta content="P&#257;&#7735;i Tipi&#7789;aka - Roman Script" name="description" />
+<link rel="apple-touch-icon" href="http://www.tipitaka.org/ios/thumbs/home-screen-icon.png"/>
+<link href="http://www.tipitaka.org/ios/thumbs/startup-image.png" rel="apple-touch-startup-image" />
+
+<script language="javascript"> 
+function insertchar(thechar)
+{
+document.googleform.q.value=document.googleform.q.value+thechar; document.googleform.q.focus();
+}
+</script> 
+
+<script type="text/javascript" src="#{url_for_solr}/admin/jquery-1.4.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="#{url_for_solr}/admin/file?file=/velocity/main-ios.css&contentType=text/css"/>
+<link rel="stylesheet" href="#{url_for_solr}/admin/file?file=/velocity/jquery.autocomplete.css&contentType=text/css" type="text/css" />
+<script type="text/javascript" src="#{url_for_solr}/admin/file?file=/velocity/jquery.autocomplete.js&contentType=text/javascript"></script>
+
+
+    <script>
+    $(document).ready(function(){
+      $("\#q").autocomplete('#{url_for_solr}/terms', {  ## backslash escaped #q as that is a macro defined in VM_global_library.vm
+           extraParams:{
+             'terms.prefix': function() { return $("\#q").val();},
+             'terms.sort': 'count',
+             'terms.fl': 'text',
+             'wt': 'velocity',
+             'v.template': 'suggest'
+           }
+         }
+      );
+
+      // http://localhost:8983/solr/terms?terms.fl=name&terms.prefix=i&terms.sort=count
+    });
+
+    </script>
+</head>
+  <body>
+<!--
+    <div id="admin"><a href="#url_for_solr/admin">Solr Admin</a></div>
+-->
+    <div id="header">
+     <div id="topbar">
+  <div id="title">P&#257;&#7735;i Tipi&#7789;aka</div>
+  <div id="leftnav"><a href="http://www.tipitaka.org/ios/romn/index.html">Back</a> </div>
+</div>
+    </div>
+    <div id="content">
+      $content
+    </div>
+    <div id="footer">
+      <hr/>
+    </div>
+  </body>
+</html>

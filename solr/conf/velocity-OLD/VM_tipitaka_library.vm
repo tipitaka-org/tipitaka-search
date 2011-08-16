@@ -1,0 +1,57 @@
+#macro(value_of_fq $name $fq_params)#foreach($value in $fq_params)#if($value.contains($name))$value.replaceFirst("\"$", "").replaceFirst("^.*\"", "")#end#end#end
+
+#macro(last $list)#foreach($i in $list)#set($last = $i)#end$last#end
+
+#macro(link_for_tree_filter $names $params $field)
+  #if($names.size() == 0)
+    <a href="#url_for_home?q=$params.getParams('q').get(0)&facet.field=$field#fq_script_filter($params.getParams('fq'))">ALL</a> 
+  #else
+    #set($values = $params.getParams('fq'))
+    #set($last = "#last($names)")
+    #set($value = "#value_of_fq($last, $values)")
+    #if($value != '')
+    &gt; <a href="#url_for_home?q=$params.getParams('q').get(0)&facet.field=$field#fq_param($names, $values)#fq_script_filter($values)">$value</a> 
+#end
+  #end
+#end
+
+#macro(link_for_tree_filter_desktop $names $params $field)
+  #if($names.size() == 0)
+    <a href="#url_for_desktop?q=$params.getParams('q').get(0)&facet.field=$field#fq_script_filter($params.getParams('fq'))">ALL</a> 
+  #else
+    #set($values = $params.getParams('fq'))
+    #set($last = "#last($names)")
+    #set($value = "#value_of_fq($last, $values)")
+    #if($value != '')
+    &gt; <a href="#url_for_desktop?q=$params.getParams('q').get(0)&facet.field=$field#fq_param($names, $values)#fq_script_filter($values)">$value</a> 
+#end
+  #end
+#end
+
+#macro(fq_script_filter $fq_params)#set($script = "#value_of_fq('script', $fq_params)")#if($script != '')&fq=$script#end#end
+
+#macro(fq_param $names $fq_params)#foreach($name in $names)#foreach($value in $fq_params)#if($value != '' && $value.startsWith($name))&fq=$esc.url($name):%22$esc.url($value.replaceFirst("\"$", "").replaceFirst("^.*\"", ""))%22#end#end#end#end
+
+#macro( breadcrumbs $params )
+  #link_for_tree_filter([], $params, 'volume')
+  #link_for_tree_filter(['volume'], $params, 'pitaka')
+  #link_for_tree_filter(['volume', 'pitaka'], $params, 'book')
+  #link_for_tree_filter(['volume', 'pitaka', 'book'], $params, 'chapter')
+  #link_for_tree_filter(['volume', 'pitaka', 'book', 'chapter'], $params, 'section')
+  #link_for_tree_filter(['volume', 'pitaka', 'book', 'chapter', 'section'], $params, 'none')
+#end
+
+#macro( breadcrumbs_desktop $params )
+  #link_for_tree_filter_desktop([], $params, 'volume')
+  #link_for_tree_filter_desktop(['volume'], $params, 'pitaka')
+  #link_for_tree_filter_desktop(['volume', 'pitaka'], $params, 'book')
+  #link_for_tree_filter_desktop(['volume', 'pitaka', 'book'], $params, 'chapter')
+  #link_for_tree_filter_desktop(['volume', 'pitaka', 'book', 'chapter'], $params, 'section')
+  #link_for_tree_filter_desktop(['volume', 'pitaka', 'book', 'chapter', 'section'], $params, 'none')
+#end
+
+#macro(find_tree_depth $fq_params)#set($depth = '')#foreach( $name in ['volume', 'pitaka', 'book', 'chapter', 'section', ''])#set( $found = '' )#foreach( $fq in $fq_params )#if( $fq.startsWith( $name ))#set( $found = $name )#end#end#if( $found == '' && $depth == '')#set( $depth = $name )#end#end$depth#end
+
+#macro(find_tree_depth_desktop $fq_params)#set($depth = '')#foreach( $name in ['volume', 'pitaka', 'book', 'chapter', 'section', ''])#set( $found = '' )#foreach( $fq in $fq_params )#if( $fq.startsWith( $name ))#set( $found = $name )#end#end#if( $found == '' && $depth == '')#set( $depth = $name )#end#end$depth#end
+
+#macro(next_facet $name)#set($map = {"volume" : "pitaka", "pitaka" : "book", "book" : "chapter", "chapter" : "section", "section" : ""})$map.get($name)#end

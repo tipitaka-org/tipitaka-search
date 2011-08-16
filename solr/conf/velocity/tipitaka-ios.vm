@@ -1,0 +1,9 @@
+#if($response.facetFields)
+  #foreach($field in $response.facetFields)
+    <ul class="pageitem">
+      #foreach($facet in $field.values)
+        <li><a href="#url_for_facet_filter_ios($field.name, $facet.name)&facet.field=#next_facet($field.name)">$facet.name</a> ($facet.count)</li>
+      #end
+    </ul>
+  #end
+#end

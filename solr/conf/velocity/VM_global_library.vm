@@ -1,0 +1,141 @@
+#macro(param $key)$request.params.get($key)#end
+
+#macro(url_for_solr)/solr#if($request.core.name != "")/$request.core.name#end#end
+#macro(url_for_ios)#url_for_solr/ios#end
+#macro(url_for_web)#url_for_solr/web#end
+
+#macro(q)&q=$!{esc.url($params.get('q'))}#end
+
+#macro(fqs $p)#foreach($fq in $p)#if($velocityCount>1)&#{end}fq=$esc.url($fq)#end#end
+
+#macro(debug)#if($request.params.get('debugQuery'))&debugQuery=true#end#end
+
+#macro(annotate)#if($request.params.get('annotateBrowse'))&annotateBrowse=true#end#end
+
+#macro(annTitle $msg)#if($annotate == true)title="$msg"#end#end
+
+#macro(url_for_start_ios $start)#url_for_ios#lens&start=$start#end
+#macro(url_for_start_web $start)#url_for_web#lens&start=$start#end
+
+## TODO: convert to use {!raw f=$field}$value (with escaping of course)
+#macro(url_for_facet_filter_ios $field $value)#url_for_ios#lens&fq=$esc.url($field):%22$esc.url($value)%22#end
+#macro(url_for_facet_filter_web $field $value)#url_for_web#lens&fq=$esc.url($field):%22$esc.url($value)%22#end
+
+#macro(link_to_previous_page_ios $text)
+  #if($page.current_page_number > 1)
+    #set($prev_start = $page.start - $page.results_per_page)
+    <a class="prev-page" href="#url_for_start_ios($prev_start)">$text</a>
+  #end
+#end
+
+#macro(link_to_previous_page_web $text)
+  #if($page.current_page_number > 1)
+    #set($prev_start = $page.start - $page.results_per_page)
+    <a class="prev-page" href="#url_for_start_web($prev_start)">$text</a>
+  #end
+#end
+
+#macro(link_to_next_page_ios $text)
+  #if($page.current_page_number < $page.page_count)
+    #set($next_start = $page.start + $page.results_per_page)
+    <a class="next-page" href="#url_for_start_ios($next_start)">$text</a>
+  #end
+#end
+
+#macro(link_to_next_page_web $text)
+  #if($page.current_page_number < $page.page_count)
+    #set($next_start = $page.start + $page.results_per_page)
+    <a class="next-page" href="#url_for_start_web($next_start)">$text</a>
+  #end
+#end
+
+#macro(link_to_page_ios $page_number $text)
+  #if($page_number == $page.current_page_number)
+    $text
+  #else
+    #if($page_number <= $page.page_count)
+      #set($page_start = $page_number * $page.results_per_page - $page.results_per_page)
+      <a class="page" href="#url_for_start_ios($page_start)">$text</a>
+    #end
+  #end
+#end
+
+#macro(link_to_page_web $page_number $text)
+  #if($page_number == $page.current_page_number)
+    $text
+  #else
+    #if($page_number <= $page.page_count)
+      #set($page_start = $page_number * $page.results_per_page - $page.results_per_page)
+      <a class="page" href="#url_for_start_web($page_start)">$text</a>
+    #end
+  #end
+#end
+       
+#macro(field $f)
+  #if($response.response.highlighting.get($docId).get($f).get(0))
+    $!response.response.highlighting.get($docId).get($f).get(0)
+  #else
+    #foreach($v in $doc.getFieldValues($f))
+      $v
+    #end
+  #end
+#end  
+
+
+## TIPITAKA related macros
+
+#macro(value_of_fq $name $fq_params)#foreach($value in $fq_params)#if($value.contains($name))$value.replaceFirst("\"$", "").replaceFirst("^.*\"", "")#end#end#end
+
+#macro(last $list)#foreach($i in $list)#set($last = $i)#end$last#end
+
+#macro(link_for_tree_filter_ios $names $params $field)
+  #if($names.size() == 0)
+    <a href="#url_for_ios?q=$params.getParams('q').get(0)&facet.field=$field#fq_script_filter($params.getParams('fq'))">ALL</a> 
+  #else
+    #set($values = $params.getParams('fq'))
+    #set($last = "#last($names)")
+    #set($value = "#value_of_fq($last, $values)")
+    #if($value != '')
+    &gt; <a href="#url_for_ios?q=$params.getParams('q').get(0)&facet.field=$field#fq_param($names, $values)#fq_script_filter($values)">$value</a> 
+#end
+  #end
+#end
+
+#macro(link_for_tree_filter_web $names $params $field)
+  #if($names.size() == 0)
+    <a href="#url_for_web?q=$params.getParams('q').get(0)&facet.field=$field#fq_script_filter($params.getParams('fq'))">ALL</a> 
+  #else
+    #set($values = $params.getParams('fq'))
+    #set($last = "#last($names)")
+    #set($value = "#value_of_fq($last, $values)")
+    #if($value != '')
+    &gt; <a href="#url_for_web?q=$params.getParams('q').get(0)&facet.field=$field#fq_param($names, $values)#fq_script_filter($values)">$value</a> 
+#end
+  #end
+#end
+
+#macro(fq_script_filter $fq_params)#set($script = "#value_of_fq('script', $fq_params)")#if($script != '')&fq=$script#end#end
+
+#macro(fq_param $names $fq_params)#foreach($name in $names)#foreach($value in $fq_params)#if($value != '' && $value.startsWith($name))&fq=$esc.url($name):%22$esc.url($value.replaceFirst("\"$", "").replaceFirst("^.*\"", ""))%22#end#end#end#end
+
+#macro( breadcrumbs_ios $params )
+  #link_for_tree_filter_ios([], $params, 'volume')
+  #link_for_tree_filter_ios(['volume'], $params, 'pitaka')
+  #link_for_tree_filter_ios(['volume', 'pitaka'], $params, 'book')
+  #link_for_tree_filter_ios(['volume', 'pitaka', 'book'], $params, 'chapter')
+  #link_for_tree_filter_ios(['volume', 'pitaka', 'book', 'chapter'], $params, 'section')
+  #link_for_tree_filter_ios(['volume', 'pitaka', 'book', 'chapter', 'section'], $params, 'none')
+#end
+
+#macro( breadcrumbs_web $params )
+  #link_for_tree_filter_web([], $params, 'volume')
+  #link_for_tree_filter_web(['volume'], $params, 'pitaka')
+  #link_for_tree_filter_web(['volume', 'pitaka'], $params, 'book')
+  #link_for_tree_filter_web(['volume', 'pitaka', 'book'], $params, 'chapter')
+  #link_for_tree_filter_web(['volume', 'pitaka', 'book', 'chapter'], $params, 'section')
+  #link_for_tree_filter_web(['volume', 'pitaka', 'book', 'chapter', 'section'], $params, 'none')
+#end
+
+#macro(find_tree_depth $fq_params)#set($depth = '')#foreach( $name in ['volume', 'pitaka', 'book', 'chapter', 'section', ''])#set( $found = '' )#foreach( $fq in $fq_params )#if( $fq.startsWith( $name ))#set( $found = $name )#end#end#if( $found == '' && $depth == '')#set( $depth = $name )#end#end$depth#end
+
+#macro(next_facet $name)#set($map = {"volume" : "pitaka", "pitaka" : "book", "book" : "chapter", "chapter" : "section", "section" : ""})$map.get($name)#end
