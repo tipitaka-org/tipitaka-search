@@ -16,7 +16,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 public class TipitakaOrgTocVisitor {
 
     static public void main(String... args) throws Exception{
-        TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor();
+        TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor(new TipitakaUrlFactory());
         visitor.accept("romn");
         
         int max = 0;
@@ -32,11 +32,13 @@ public class TipitakaOrgTocVisitor {
 
     private XmlPullParserFactory factory;
     private Stack<String> stack;
-    private String script;
+    //protected String script;
     private Map<String, String[]> map;
-    
-    public TipitakaOrgTocVisitor() throws XmlPullParserException{
+    private final TipitakaUrlFactory urlFactory;
+
+    public TipitakaOrgTocVisitor(TipitakaUrlFactory urlFactory) throws XmlPullParserException{
         factory = XmlPullParserFactory.newInstance();
+        this.urlFactory = urlFactory;
     }
     
     public Map<String, String[]> map(){
@@ -45,15 +47,14 @@ public class TipitakaOrgTocVisitor {
     
     public void accept(String script) throws XmlPullParserException, IOException{
         this.stack = new Stack<String>();
-        this.script = script;
         this.map = new LinkedHashMap<String, String[]>();
         
-        acceptPath("tipitaka_toc.xml");
+        acceptPath(script, "tipitaka_toc.xml");
     }
     
-    private void acceptPath(String path) throws XmlPullParserException, IOException{
+    protected void acceptPath(String script, String path) throws XmlPullParserException, IOException{
         XmlPullParser xpp = factory.newPullParser();
-        URL url = TipitakaUrlFactory.newURL(script, path);
+        URL url = urlFactory.newURL(script, path);
 
         System.out.println("parsing " + url);
         
@@ -61,7 +62,7 @@ public class TipitakaOrgTocVisitor {
         try {
             reader = new InputStreamReader(url.openStream(), "UTF-16" );
             xpp.setInput( reader );
-            accept(xpp);
+            accept(script, xpp);
         }
         catch(XmlPullParserException e){
             if( reader != null ){
@@ -69,26 +70,26 @@ public class TipitakaOrgTocVisitor {
             }
             reader = new InputStreamReader(url.openStream(), "UTF-8" );
             xpp.setInput( reader );
-            accept(xpp);
+            accept(script, xpp);
         }
     }
     
-    private void accept(XmlPullParser xpp) throws XmlPullParserException, IOException{
+    private void accept(String script, XmlPullParser xpp) throws XmlPullParserException, IOException{
         int eventType = xpp.getEventType();
         if(eventType == XmlPullParser.END_DOCUMENT) {
             return;
         } else if (eventType == XmlPullParser.START_TAG) {
-            visitTree(xpp);
+            visitTree(script, xpp);
         } else if (eventType == XmlPullParser.END_TAG) {
             if(!stack.isEmpty()){
                 stack.pop();
             }
         }
         xpp.next();
-        accept(xpp);
+        accept(script, xpp);
     }
     
-    private void visitTree(XmlPullParser xpp) throws XmlPullParserException, IOException {
+    private void visitTree(String script, XmlPullParser xpp) throws XmlPullParserException, IOException {
         switch(xpp.getAttributeCount()){
             case 1:
                 stack.push(xpp.getAttributeValue(0));
@@ -96,11 +97,11 @@ public class TipitakaOrgTocVisitor {
             case 2:
                 stack.push(xpp.getAttributeValue(0));
                 System.out.println(stack + " -> " + xpp.getAttributeValue(1));
-                acceptPath(xpp.getAttributeValue(1));
+                acceptPath(script, xpp.getAttributeValue(1));
                 break;
             case 3:
                 stack.push(xpp.getAttributeValue(0));
-                System.err.println(stack + " => " + xpp.getAttributeValue(1));
+                System.err.println(xpp.getAttributeValue(1) + " => " + stack);
                 map.put(xpp.getAttributeValue(1), stack.toArray(new String[stack.size()]));
                 break;
             default:

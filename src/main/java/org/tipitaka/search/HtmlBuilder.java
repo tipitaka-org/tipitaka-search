@@ -21,7 +21,7 @@ public class HtmlBuilder {
     private final ScriptFactory factory;
     
     public HtmlBuilder(Writer writer, String prefix, Script script, String path, 
-            DirectoryStructure structure, ScriptFactory factory) {
+            DirectoryStructure structure, ScriptFactory factory, TipitakaUrlFactory urlFactory) {
         this.writer = writer;
         this.path = path;
         this.prefix = prefix;
@@ -29,7 +29,7 @@ public class HtmlBuilder {
         this.structure = structure;
         this.factory = factory;
         try {
-            this.tipitaka = new TipitakaOrgVisitorHtml();
+            this.tipitaka = new TipitakaOrgVisitorHtml(urlFactory);
         } catch (XmlPullParserException e) {
             throw new RuntimeException("error creating html visitor", e);
         }

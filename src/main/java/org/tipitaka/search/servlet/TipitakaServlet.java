@@ -1,6 +1,7 @@
 package org.tipitaka.search.servlet;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
@@ -38,14 +39,16 @@ public class TipitakaServlet extends HttpServlet{
         
         log("using tipitaka browsing path prefix: " + prefix);
         factory = new ScriptFactory();
-        directory = new DirectoryStructure();
         ResourceLocator locator = new ResourceLocator();
+        File dir = locator.localDir();
+        TipitakaUrlFactory urlFactory = dir.exists() ? new TipitakaUrlFactory(dir) : new TipitakaUrlFactory();
+        directory = new DirectoryStructure(urlFactory);
         try {
             directory.load(locator.getResourceAsReader("romn.map"));
         } catch (IOException e) {
             throw new ServletException("can not setup directory structure", e);
         }
-        builderFactory = new HtmlBuilderFactory(factory, directory);
+        builderFactory = new HtmlBuilderFactory(factory, directory, urlFactory);
     }
 
     @Override
@@ -92,7 +95,7 @@ public class TipitakaServlet extends HttpServlet{
         }
         
         void buildTei() throws IOException{
-            URL url = TipitakaUrlFactory.newURL(script.tipitakaOrgName, directory.fileOf(path.path.replace(".tei.xml", "")));
+            URL url = new TipitakaUrlFactory().newURL(script.tipitakaOrgName, directory.fileOf(path.path.replace(".tei.xml", "")));
             System.out.println(url.toString());
             BufferedReader reader = null;
             try {

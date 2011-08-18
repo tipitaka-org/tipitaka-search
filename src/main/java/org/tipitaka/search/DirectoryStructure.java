@@ -26,7 +26,7 @@ public class DirectoryStructure {
     
     public static void main(String... args) throws Exception {
         long start = System.currentTimeMillis();
-        DirectoryStructure dir = new DirectoryStructure();
+        DirectoryStructure dir = new DirectoryStructure(new TipitakaUrlFactory());
 //        dir.reload();
 //        dir.save(new FileWriter("/home/kristian/romn.map"));
         dir.load(new FileReader("/home/kristian/romn.map"));
@@ -72,7 +72,7 @@ public class DirectoryStructure {
         }
         System.err.println("---------------------------------");       
         long start2 = System.currentTimeMillis();
-        HtmlBuilderFactory factory = new HtmlBuilderFactory(new ScriptFactory(), dir);
+        HtmlBuilderFactory factory = new HtmlBuilderFactory(new ScriptFactory(), dir, new TipitakaUrlFactory());
         
         String path = "/" + script.name + "/anya/sihala-gantha-sangaho/dhatuvamsa/dhatuparamparakatha";
         HtmlBuilder builder = factory.newHtmlBuilder(new FileWriter("/home/kristian/deva-test.html"), new TipitakaPath("", path));
@@ -149,8 +149,14 @@ public class DirectoryStructure {
     private final Map<String, String> map = new LinkedHashMap<String, String>();
     private final Map<String, String> rmap = new HashMap<String, String>();
 
+    private final TipitakaUrlFactory urlFactory;
+    
+    public DirectoryStructure(TipitakaUrlFactory urlFactory) {
+        this.urlFactory = urlFactory;
+    }
+
     void reload() throws XmlPullParserException, IOException{
-        TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor();
+        TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor(this.urlFactory);
         visitor.accept("romn");
         
         List<String> parts = new ArrayList<String>(6);
@@ -172,7 +178,7 @@ public class DirectoryStructure {
     }
 
     Script transcribe(String script) throws XmlPullParserException, IOException{
-        TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor();
+        TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor(this.urlFactory);
         visitor.accept(script);
         ScriptFactory factory = new ScriptFactory();
         Script words = factory.newScript(script);

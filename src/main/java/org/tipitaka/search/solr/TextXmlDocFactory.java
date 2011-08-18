@@ -16,23 +16,25 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public class TextXmlDocFactory {
     private XmlPullParserFactory factory;
-    private String script;
+    private final String script;
+    private final TipitakaUrlFactory urlFactory;
     
     public static void main(String... args) throws Exception {
-        TextXmlDocFactory factory = new TextXmlDocFactory("deva");
+        TextXmlDocFactory factory = new TextXmlDocFactory("deva", new TipitakaUrlFactory());
         TextXmlDoc t = factory.newTextXmlDoc("cscd/s0304m.mul6.xml", new String[0]);
         System.out.println(t.toXml());
     }
     
-    public TextXmlDocFactory(String script) throws XmlPullParserException{
+    public TextXmlDocFactory(String script, TipitakaUrlFactory urlFactory) throws XmlPullParserException{
         factory = XmlPullParserFactory.newInstance();
         this.script = script;
+        this.urlFactory = urlFactory;
     }
     
     public TextXmlDoc newTextXmlDoc(String path, String[] context) 
             throws XmlPullParserException, IOException {
         XmlPullParser xpp = factory.newPullParser();
-        URL url = TipitakaUrlFactory.newURL(script, path);
+        URL url = urlFactory.newURL(script, path);
 
         System.out.println("parsing text " + url);
         

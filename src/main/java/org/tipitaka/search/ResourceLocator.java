@@ -3,6 +3,7 @@
  */
 package org.tipitaka.search;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -29,7 +30,12 @@ public class ResourceLocator {
         return in;
     }
     
+    
     public Reader getResourceAsReader(String path) throws FileNotFoundException{
         return new InputStreamReader(getResourceAsStream(path), Charset.forName("UTF-8"));
+    }
+
+    public File localDir() {
+        return new File(System.getProperty("solr.solr.home") + "/tipitaka/");
     }
 }

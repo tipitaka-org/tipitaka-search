@@ -8,12 +8,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class TipitakaOrgVisitorHtml extends TipitakaOrgVisitor {
 
-    public TipitakaOrgVisitorHtml() throws XmlPullParserException {
-        super();
+    public TipitakaOrgVisitorHtml(TipitakaUrlFactory urlFactory) throws XmlPullParserException {
+        super(urlFactory);
     }
 
     static public void main(String... args) throws Exception{
-        TipitakaOrgVisitorHtml visitor = new TipitakaOrgVisitorHtml();
+        TipitakaOrgVisitorHtml visitor = new TipitakaOrgVisitorHtml(new TipitakaUrlFactory());
         visitor.accept(new OutputStreamWriter(System.out), "deva", "cscd/vin01m.mul0.xml");
     }
 

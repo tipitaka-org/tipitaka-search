@@ -13,15 +13,21 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public abstract class TipitakaOrgVisitor {
 
-    private XmlPullParserFactory factory;
+    private final XmlPullParserFactory factory;
+    private final TipitakaUrlFactory urlFactory;
     
-    public TipitakaOrgVisitor() throws XmlPullParserException{
+//    public TipitakaOrgVisitor() throws XmlPullParserException{
+//        this(null);
+//    }
+//    
+    public TipitakaOrgVisitor(TipitakaUrlFactory urlFactory) throws XmlPullParserException{
         factory = XmlPullParserFactory.newInstance();
+        this.urlFactory = urlFactory;
     }
         
     public void accept(Writer writer, String script, String path) throws XmlPullParserException, IOException{
         XmlPullParser xpp = factory.newPullParser();
-        URL url = TipitakaUrlFactory.newURL(script, path);
+        URL url = urlFactory.newURL(script, path);
 
         System.out.println("parsing " + url);
         
