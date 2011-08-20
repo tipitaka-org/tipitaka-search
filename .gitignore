@@ -1,2 +1,4 @@
 target/
 solr/data/
+solr/tipitaka/
+velocity.log*
