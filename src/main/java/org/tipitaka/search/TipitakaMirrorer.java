@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -27,8 +28,12 @@ public class TipitakaMirrorer {
         mirrorer.mirror("romn");
     }
     
+    public TipitakaMirrorer(TipitakaUrlFactory urlFactory){
+        mirrorFactory = urlFactory;
+    }
+    
     public TipitakaMirrorer(File basedir){
-        mirrorFactory = new TipitakaUrlFactory(basedir.toURI().toString());
+        this(new TipitakaUrlFactory(basedir.toURI().toString()));
     }
     
     public TipitakaMirrorer(String basedir) throws MalformedURLException{
@@ -61,8 +66,9 @@ public class TipitakaMirrorer {
         file.getParentFile().mkdirs();
         InputStream in = null;
         OutputStream out = null;
+        URLConnection con = null;
         try { 
-            URLConnection con = from.openConnection();
+            con = from.openConnection();
             System.err.print(script + "/" + path);
             if(file.lastModified() < con.getLastModified()){
                 in = new BufferedInputStream(con.getInputStream());
@@ -86,6 +92,9 @@ public class TipitakaMirrorer {
             }
             if( out != null ){
                 out.close();
+            }
+            if( con != null){
+                ((HttpURLConnection)con).disconnect();
             }
         }
     }

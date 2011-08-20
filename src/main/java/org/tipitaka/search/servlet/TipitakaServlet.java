@@ -1,11 +1,7 @@
 package org.tipitaka.search.servlet;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Writer;
-import java.net.URL;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,11 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.tipitaka.search.BuilderFactory;
 import org.tipitaka.search.DirectoryStructure;
 import org.tipitaka.search.HtmlBuilder;
-import org.tipitaka.search.HtmlBuilderFactory;
 import org.tipitaka.search.ResourceLocator;
-import org.tipitaka.search.Script;
 import org.tipitaka.search.ScriptFactory;
 import org.tipitaka.search.TipitakaPath;
 import org.tipitaka.search.TipitakaUrlFactory;
@@ -25,7 +20,7 @@ import org.tipitaka.search.TipitakaUrlFactory;
 public class TipitakaServlet extends HttpServlet{
     private static final long serialVersionUID = 1L;
 
-    private HtmlBuilderFactory builderFactory;
+    private BuilderFactory builderFactory;
     private DirectoryStructure directory;
     private ScriptFactory factory;
     private String prefix;
@@ -44,11 +39,11 @@ public class TipitakaServlet extends HttpServlet{
         TipitakaUrlFactory urlFactory = dir.exists() ? new TipitakaUrlFactory(dir) : new TipitakaUrlFactory();
         directory = new DirectoryStructure(urlFactory);
         try {
-            directory.load(locator.getResourceAsReader("romn.map"));
+            directory.load(locator.getResourceAsReader("directory.map"));
         } catch (IOException e) {
             throw new ServletException("can not setup directory structure", e);
         }
-        builderFactory = new HtmlBuilderFactory(factory, directory, urlFactory);
+        builderFactory = new BuilderFactory(factory, directory, urlFactory);
     }
 
     @Override
@@ -75,60 +70,9 @@ public class TipitakaServlet extends HttpServlet{
                 break;
             case TEI:
                 resp.setContentType("application/xml");
-                new XmlBuilder(factory, directory, resp.getWriter(), path).buildTei();
+                builderFactory.newXmlBuilder(resp.getWriter(), path).buildTei();
                 break;
         }
-    }
-    
-    static class XmlBuilder {
-        
-        private Writer writer;
-        private TipitakaPath path;
-        private DirectoryStructure directory;
-        private final Script script;
-        
-        XmlBuilder(ScriptFactory factory, DirectoryStructure directory, Writer writer, TipitakaPath path) throws IOException{
-            this.writer = writer;
-            this.path = path;
-            this.directory = directory;
-            this.script = factory.script(path.script);
-        }
-        
-        void buildTei() throws IOException{
-            URL url = new TipitakaUrlFactory().newURL(script.tipitakaOrgName, directory.fileOf(path.path.replace(".tei.xml", "")));
-            System.out.println(url.toString());
-            BufferedReader reader = null;
-            try {
-                try {
-                    reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-16"));
-                    copyAndFilterStream(reader);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    if (reader != null) {
-                        reader.close();
-                    }
-                    reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-                    copyAndFilterStream(reader);
-                }
-            } finally {
-                if (reader != null) {
-                    reader.close();
-                }
-            }
-        }
-
-        private void copyAndFilterStream(BufferedReader reader) throws IOException {
-            writer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-            String line = reader.readLine(); //ignore xml instruction
-            line = reader.readLine(); // ignore the xslt processing instruction
-            line = reader.readLine();
-            while(line != null){
-                writer.append(line).append("\n");
-                line = reader.readLine();
-            }
-            writer.flush();
-        }
-
     }
 
 }

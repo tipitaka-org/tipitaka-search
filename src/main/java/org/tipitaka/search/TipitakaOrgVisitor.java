@@ -16,12 +16,8 @@ public abstract class TipitakaOrgVisitor {
     private final XmlPullParserFactory factory;
     private final TipitakaUrlFactory urlFactory;
     
-//    public TipitakaOrgVisitor() throws XmlPullParserException{
-//        this(null);
-//    }
-//    
     public TipitakaOrgVisitor(TipitakaUrlFactory urlFactory) throws XmlPullParserException{
-        factory = XmlPullParserFactory.newInstance();
+        this.factory = XmlPullParserFactory.newInstance();
         this.urlFactory = urlFactory;
     }
         

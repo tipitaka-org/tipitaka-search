@@ -18,6 +18,9 @@ public class ResourceLocator {
         if(System.getProperty("solr.solr.home") != null){
             in = new FileInputStream(System.getProperty("solr.solr.home") + "/tipitaka/" + path);
         }
+        else {
+            in = new FileInputStream("./solr/tipitaka/" + path);
+        }
         if(in == null){
             in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
             if(in == null){
@@ -36,6 +39,11 @@ public class ResourceLocator {
     }
 
     public File localDir() {
-        return new File(System.getProperty("solr.solr.home") + "/tipitaka/");
+        if(System.getProperty("solr.solr.home") != null){
+            return new File(System.getProperty("solr.solr.home") + "/tipitaka/");
+        }
+        else {
+            return new File("./solr/tipitaka/");
+        }
     }
 }

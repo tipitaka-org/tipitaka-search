@@ -4,6 +4,7 @@
 package org.tipitaka.search;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class DirectoryStructure {
         }
         System.err.println("---------------------------------");       
         long start2 = System.currentTimeMillis();
-        HtmlBuilderFactory factory = new HtmlBuilderFactory(new ScriptFactory(), dir, new TipitakaUrlFactory());
+        BuilderFactory factory = new BuilderFactory(new ScriptFactory(), dir, new TipitakaUrlFactory());
         
         String path = "/" + script.name + "/anya/sihala-gantha-sangaho/dhatuvamsa/dhatuparamparakatha";
         HtmlBuilder builder = factory.newHtmlBuilder(new FileWriter("/home/kristian/deva-test.html"), new TipitakaPath("", path));
@@ -203,14 +204,21 @@ public class DirectoryStructure {
         }
         return words;
     }
-     
+   
+    void save(File file) throws IOException {
+        save(new FileWriter(file));
+    }
+    
     void save(Writer writer) throws IOException{
         for(Map.Entry<String, String> entry: map.entrySet()){
             writer.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
         }
         writer.close();
     }
-
+    public void load(File file) throws IOException{
+        load(new FileReader(file));
+    }
+    
     public void load(Reader reader) throws IOException{
         map.clear();
         rmap.clear();
