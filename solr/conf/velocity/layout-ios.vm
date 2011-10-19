@@ -38,7 +38,7 @@ document.googleform.q.value=document.googleform.q.value+thechar; document.google
 </script> 
 
 <script type="text/javascript" src="#{url_for_solr}/admin/jquery-1.4.3.min.js"></script>
-<link rel="stylesheet" type="text/css" href="#{url_for_solr}/admin/file?file=/velocity/main-ios.css&contentType=text/css"/>
+<link rel="stylesheet" type="text/css" href="/main-ios.css"/>
 <link rel="stylesheet" href="#{url_for_solr}/admin/file?file=/velocity/jquery.autocomplete.css&contentType=text/css" type="text/css" />
 <script type="text/javascript" src="#{url_for_solr}/admin/file?file=/velocity/jquery.autocomplete.js&contentType=text/javascript"></script>
 
