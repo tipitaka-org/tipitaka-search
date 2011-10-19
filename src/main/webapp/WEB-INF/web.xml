@@ -116,12 +116,6 @@
     <servlet-class>org.apache.solr.servlet.LogLevelSelection</servlet-class>
   </servlet>
 
-  <!-- @Deprecated -->
-  <servlet>
-    <servlet-name>ping</servlet-name>
-    <jsp-file>/admin/ping.jsp</jsp-file>
-  </servlet>
-
   <servlet>
     <servlet-name>tipitaka</servlet-name>
     <servlet-class>org.tipitaka.search.servlet.TipitakaServlet</servlet-class>
@@ -146,23 +140,6 @@
     <url-pattern>/update/*</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>Logging</servlet-name>
-    <url-pattern>/admin/logging</url-pattern>
-  </servlet-mapping>
-
-  <!-- @Deprecated -->
-  <servlet-mapping>
-    <servlet-name>ping</servlet-name>
-    <url-pattern>/admin/ping</url-pattern>
-  </servlet-mapping>
-
-  <!-- @Deprecated -->
-  <servlet-mapping>
-    <servlet-name>Logging</servlet-name>
-    <url-pattern>/admin/logging.jsp</url-pattern>
-  </servlet-mapping>
-  
   <mime-mapping>
     <extension>.xsl</extension>
     <!-- per http://www.w3.org/TR/2006/PR-xslt20-20061121/ -->
