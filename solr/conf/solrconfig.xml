@@ -781,7 +781,7 @@
        <str name="v.layout">layout-ios</str>
        <str name="title">Solritas</str>
 
-       <str name="defType">edismax</str>
+       <str name="defType">roman</str>
        <str name="q.alt">*:*</str>
        <str name="rows">10</str>
        <str name="fl">*,score</str>
