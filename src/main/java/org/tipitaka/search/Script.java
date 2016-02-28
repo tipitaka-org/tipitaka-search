@@ -31,7 +31,7 @@ public class Script{
     String get(String key){
         return words.getProperty(key);
     }
-    
+
     public void save(File file) throws IOException{
         save(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
     }

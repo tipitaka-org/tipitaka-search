@@ -30,7 +30,7 @@ public class HtmlBuilder {
         this.factory = factory;
         try {
             this.tipitaka = new TipitakaOrgVisitorHtml(urlFactory);
-        } catch (XmlPullParserException e) {
+        } catch (Exception e) {
             throw new RuntimeException("error creating html visitor", e);
         }
     }
@@ -58,11 +58,7 @@ public class HtmlBuilder {
         String file = structure.fileOf(path.replaceFirst("\\.[a-z]+$", ""));
         if(file != null){
             writer.append("    <div class='page'>\n");
-            try {
-                tipitaka.accept(writer, script.tipitakaOrgName, file);
-            } catch (XmlPullParserException e) {
-                throw new RuntimeException("parse error", e);
-            }
+            tipitaka.accept(writer, script, file);
             writer.append("    </div>\n");
         }
     }

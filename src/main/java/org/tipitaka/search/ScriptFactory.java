@@ -45,6 +45,6 @@ public class ScriptFactory {
     }
 
     public Script newScript(String script) {
-        return new Script(script, INVERSE.get(script));
+        return new Script(MAP.get(script), script);
     }
 }

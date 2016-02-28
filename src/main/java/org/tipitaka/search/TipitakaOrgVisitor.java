@@ -11,36 +11,43 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-public abstract class TipitakaOrgVisitor {
+public abstract class TipitakaOrgVisitor implements Visitor
+{
 
     private final XmlPullParserFactory factory;
-    private final TipitakaUrlFactory urlFactory;
+    protected final TipitakaUrlFactory urlFactory;
     
     public TipitakaOrgVisitor(TipitakaUrlFactory urlFactory) throws XmlPullParserException{
         this.factory = XmlPullParserFactory.newInstance();
         this.urlFactory = urlFactory;
     }
         
-    public void accept(Writer writer, String script, String path) throws XmlPullParserException, IOException{
-        XmlPullParser xpp = factory.newPullParser();
-        URL url = urlFactory.newURL(script, path);
+    public void accept(Writer writer, Script script, String path) throws IOException{
+        URL url = urlFactory.newURL(script.tipitakaOrgName, path);
 
-        System.out.println("parsing " + url);
-        
+        docStart(writer, url.toString());
         Reader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-16" ));
-            xpp.setInput( reader );
-            accept(writer, xpp);
-        }
-        catch(XmlPullParserException e){
-            if( reader != null ){
-                reader.close();
+            XmlPullParser xpp = factory.newPullParser();
+            try {
+                reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-16"));
+                xpp.setInput(reader);
+                accept(writer, xpp);
             }
-            reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8" ));
-            xpp.setInput( reader );
-            accept(writer, xpp);
+            catch (XmlPullParserException e) {
+                if (reader != null) {
+                    reader.close();
+                }
+                reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+                xpp.setInput(reader);
+                accept(writer, xpp);
+            }
         }
+        catch (XmlPullParserException e) {
+            throw new IOException("pull parser error", e);
+        }
+        docEnd(writer);
+        writer.flush();
     }
     
     private void accept(Writer writer, XmlPullParser xpp) throws XmlPullParserException, IOException{
@@ -50,7 +57,7 @@ public abstract class TipitakaOrgVisitor {
                 visitStartTag(writer, xpp);
             }
             else if (eventType == XmlPullParser.TEXT){
-                writer.append(xpp.getText().trim());
+                writer.append(xpp.getText());
             }
             else if (eventType == XmlPullParser.END_TAG) {
                 visitEndTag(writer, xpp);
@@ -59,7 +66,8 @@ public abstract class TipitakaOrgVisitor {
         }
         writer.flush();
     }
-    
+
+    private boolean isDot = false;
     private void visitStartTag(Writer writer, XmlPullParser xpp) throws XmlPullParserException, IOException {
         if(xpp.getName().equals("pb")){
             pb(writer, xpp.getAttributeValue(null, "ed"), xpp.getAttributeValue(null, "n"));
@@ -72,14 +80,23 @@ public abstract class TipitakaOrgVisitor {
             if("centre".equals(rend)){
                 rend = "centered";
             }
-            pStart(writer, rend);
+            String number = xpp.getAttributeValue(null, "n");
+            pStart(writer, rend, number);
         }
         else if (xpp.getName().equals("hi")){
             String rend = xpp.getAttributeValue(null, "rend");
             if("bold".equals(rend)){
                 rend = "bld";
             }
-            hiStart(writer, rend);
+            if (!"dot".equals(rend)) {
+                hiStart(writer, rend);
+            }
+            else {
+                isDot = true;
+            }
+        }
+        else {
+            //System.err.println(xpp.getName());
         }
     }
     
@@ -91,15 +108,24 @@ public abstract class TipitakaOrgVisitor {
             pEnd(writer);
         }
         else if (xpp.getName().equals("hi")){
-            hiEnd(writer);
+            if (isDot) {
+                isDot = false;
+            }
+            else {
+                hiEnd(writer);
+            }
         }
     }
+
+    abstract protected void docStart(Writer writer, String url) throws IOException;
+
+    abstract protected void docEnd(Writer writer) throws IOException;
 
     abstract protected void hiStart(Writer writer, String clazz) throws IOException;
     
     abstract protected void hiEnd(Writer writer) throws IOException;
 
-    abstract protected void pStart(Writer writer, String clazz) throws IOException;
+    abstract protected void pStart(Writer writer, String clazz, String number) throws IOException;
   
     abstract protected void pEnd(Writer writer) throws IOException;
     

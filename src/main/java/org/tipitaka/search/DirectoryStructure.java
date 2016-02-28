@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -89,7 +90,11 @@ public class DirectoryStructure {
         System.err.println(System.currentTimeMillis() - start2);
         factory.newHtmlBuilder(new FileWriter("/home/kristian/deva-test-mini.html"), new TipitakaPath("", path)).buildMinimal();
     }
-    
+
+    public Collection<String> allPaths() {
+        return map.keySet();
+    }
+
     public Map<String, String> list(Script words, String path) {
         if(map.containsKey(path)){
             return listFiles(words, path);
@@ -128,7 +133,7 @@ public class DirectoryStructure {
 
     public Map<String, String> breadCrumbs(Script trans, String path) {
         Map<String, String> result = new LinkedHashMap<String, String>();
-        if(path != null && !"/".equals(path)){
+        if(path != null && !"/".equals(path)) {
             if (path.endsWith("/")) {
                 path = path.substring(0, path.length() - 1);
             }
@@ -136,11 +141,16 @@ public class DirectoryStructure {
             int next = path.indexOf("/", from);
             while (next > -1) {
                 result.put(path.substring(0, next), trans.get(path.substring(
-                        from, next)));
+                    from, next)));
                 from = next + 1;
                 next = path.indexOf("/", from);
             }
-            result.put(path, trans.get(path.substring(from)));
+            if (path.length() == 0) {
+                result.put(path, "ROOT");
+            }
+            else {
+                result.put(path, trans.get(path.substring(from)));
+            }
         }
         return result;
     }
@@ -165,13 +175,15 @@ public class DirectoryStructure {
             parts.clear();
             for(String part: entry.getValue()){
                 if(part != null){
-                    parts.add(RomanScriptHelper.removeDiacritcals(part.replaceFirst("[(][0-9]+[)]", "").replaceFirst("[0-9]+\\.\\ ", "")
-                            .replaceFirst("(bhikkhunīvibhaṅgo)", "- bhikkhunīvibhaṅgo")//.replaceFirst("\\ [(].*[)]", "")
-                            .replaceAll("[()]","").replace("’", " "))
-                            .toLowerCase().trim().replaceAll(" ", "_"));
+                    parts.add(RomanScriptHelper.removeDiacritcals(part//.replaceFirst("[(][0-9]+[)]", "").replaceFirst("[0-9]+\\.\\ ", "")
+								  //.replaceFirst("(bhikkhunīvibhaṅgo)", "- bhikkhunīvibhaṅgo")//.replaceFirst("\\ [(].*[)]", "")
+								  //.replaceAll("[()]","").replace("’", " "))
+								  .replaceFirst("\\.$", "")
+								  .toLowerCase().trim()));//.replaceAll(" ", "_"));
                 }
             }
             String path = root.addLeaf(entry.getKey(), parts);
+	    while (map.containsKey(path)) path += "_";
             map.put(path, entry.getKey());
             rmap.put(entry.getKey(), path);
         }
@@ -195,11 +207,12 @@ public class DirectoryStructure {
             if(rmap.containsKey(entry.getKey())){
                 String[] paths = rmap.get(entry.getKey()).substring(1).split("/");
                 for(int i = 0; i < paths.length; i++){
+                    System.err.println(paths[i] + " <> " + parts.get(i));
                     words.put(paths[i], parts.get(i));
                 }
             }
             else {
-                System.err.println("---" + entry.getKey());
+                //System.err.println("---" + entry.getKey());
             }
         }
         return words;
@@ -240,7 +253,10 @@ public class DirectoryStructure {
             }
         }
     }
-    
+
+    public String pathOfOrignalFile(String path) {
+        return rmap.get(path);
+    }
     public String fileOf(String path){
         return map.get(path);
     }
@@ -253,7 +269,6 @@ public class DirectoryStructure {
             return EMPTY;
         }
         path = path.replaceAll("^/|/$", "");
-        System.err.println("--- " + path);
         return root.getNode(path.split("/")).children.keySet();
     }
     
