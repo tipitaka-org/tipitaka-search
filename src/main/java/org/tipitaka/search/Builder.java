@@ -98,12 +98,12 @@ class Builder
         writer.append("<!doctype html>\n" +
             "<html>\n" +
             "<head>\n" +
-            "<link rel=\"stylesheet\" href=\"/nav.css\">\n" +
+            "<link rel=\"stylesheet\" href=\"/").append(script.name).append("/style.css\">\n" +
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
         if (this.url != null) {
             writer.append("<meta name=\"normative-source\" content=\"").append(url).append("\" />\n");
         }
-        writer.append("<meta name=\"archive-path\" content=\"").append(this.path).append(".html\" />\n");
+        writer.append("<meta name=\"archive-path\" content=\"").append("/").append(script.name).append(this.path).append(".html\" />\n");
 
         appendTitle();
 
@@ -121,11 +121,19 @@ class Builder
         writer.append("<div class=\"navigation-container\">\n" +
             "<div class=\"navigation\">\n");
         writer.append("<span>");
+        //if ("/".equals(path)) {
+        //    writer.append("ROOT");
+        //}
+        //else {
+            writer.append("<a href=\"").append("/index.html\">ROOT</a>");
+        //}
+        writer.append("</span>\n<span> - </span>\n<span>");
         if ("/".equals(path)) {
-            writer.append("ROOT");
+            writer.append(script.name);
         }
         else {
-            writer.append("<a href=\"").append("/index.html\">ROOT</a>");
+            writer.append("<a href=\"").append("/").append(script.name).append("/index.html\">").append(script.name)
+                .append("</a>");
         }
         writer.append("</span>");
         List<Map.Entry<String, String>> crumbs = new LinkedList<Map.Entry<String, String>>(breadCrumbs.entrySet());
@@ -139,7 +147,8 @@ class Builder
                         writer.append(part.getValue());
                     }
                     else {
-                        writer.append("<a href=\"").append(part.getKey()).append("/index.html\">")
+                        writer.append("<a href=\"").append("/").append(script.name).append(part.getKey()).append(
+                            "/index.html\">")
                             .append(part.getValue()).append("</a>");
                     }
                     writer.append("</span>");
@@ -156,7 +165,7 @@ class Builder
                 writer.append(entry.getValue());
             }
             else {
-                writer.append("<a href=\"").append(entry.getKey()).append(postfix).append("\">")
+                writer.append("<a href=\"").append("/").append(script.name).append(entry.getKey()).append(postfix).append("\">")
                     .append(entry.getValue()).append("</a>");
 
             }

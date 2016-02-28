@@ -49,7 +49,7 @@ public class TipitakaOrgVisitorHtml extends TipitakaOrgVisitor {
 
     public void generateAll(File basedir, Script script) throws IOException {
         for (String path: this.directory.allPaths()) {
-            File index = new File(basedir, path + ".html");
+            File index = new File(basedir, script.name + path + ".html");
             System.err.println(index);
             index.getParentFile().mkdirs();
             // TODO ensure utf-8
@@ -102,6 +102,7 @@ public class TipitakaOrgVisitorHtml extends TipitakaOrgVisitor {
         if (number != null) {
             isAnchor = true;
             writer.append("<a name=\"para").append(number).append("\" href=\"")
+                .append("/").append(this.builder.script.name)
                 .append(this.builder.path).append(".html#para").append(number).append("\">");
         }
     }

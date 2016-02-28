@@ -42,7 +42,7 @@ public class TipitakaOrgVisitorIndexHtml implements Visitor {
                 if (key == null) key = "";
                 if (!done.contains(key)) {
                     done.add(key);
-                    File index = new File(basedir, key + "/index.html");
+                    File index = new File(basedir, script.name + key + "/index.html");
                     System.err.println(index);
                     index.getParentFile().mkdirs();
                     // TODO ensure utf-8
