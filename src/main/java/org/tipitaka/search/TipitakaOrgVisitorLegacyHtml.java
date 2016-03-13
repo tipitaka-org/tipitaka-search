@@ -32,11 +32,15 @@ public class TipitakaOrgVisitorLegacyHtml
         writer.append("</body>\n</html>\n");
     }
 
-    protected void hiStart(Writer writer, String clazz) throws IOException {
+    protected String hiStart(Writer writer, String clazz) throws IOException {
+        if ("dot".equals(clazz)) {
+            return OMIT;
+        }
         writer.append("<span class=\"").append(clazz).append("\">");
+        return clazz;
     }
     
-    protected void hiEnd(Writer writer) throws IOException {
+    protected void hiEnd(Writer writer, final String clazz) throws IOException {
         writer.append("</span>");
     }
 
@@ -47,7 +51,7 @@ public class TipitakaOrgVisitorLegacyHtml
         }
     }
 
-    protected void pEnd(Writer writer) throws IOException {
+    protected void pEnd(Writer writer, final String clazz) throws IOException {
         writer.append("</p>");
     }
     

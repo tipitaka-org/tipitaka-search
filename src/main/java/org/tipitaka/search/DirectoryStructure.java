@@ -166,7 +166,7 @@ public class DirectoryStructure {
         this.urlFactory = urlFactory;
     }
 
-    void reload() throws XmlPullParserException, IOException{
+    public void reload() throws XmlPullParserException, IOException{
         TipitakaOrgTocVisitor visitor = new TipitakaOrgTocVisitor(this.urlFactory);
         visitor.accept("romn");
         

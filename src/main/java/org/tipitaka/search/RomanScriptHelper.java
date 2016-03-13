@@ -13,7 +13,7 @@ public class RomanScriptHelper {
                 .replace("ī", "i")
                 .replace("Ṇ", "N").replace("Ḍ", "D").replace("Ḷ", "L")
                 .replace("Ū", "U").replace("Ñ", "N").replace("Ṭ", "T")
-                .replace("Ṃ", "M").replace("Ṅ", "N").replace("Ã", "A")
+                .replace("Ṃ", "M").replace("Ṅ", "N").replace("Ā", "A")
                 .replace("Ī", "I");
     }
 }

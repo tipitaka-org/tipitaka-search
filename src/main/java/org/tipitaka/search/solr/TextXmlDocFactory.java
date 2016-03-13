@@ -34,7 +34,7 @@ public class TextXmlDocFactory {
     public TextXmlDoc newTextXmlDoc(String path, String[] context) 
             throws XmlPullParserException, IOException {
         XmlPullParser xpp = factory.newPullParser();
-        URL url = urlFactory.newURL(script, path);
+        URL url = urlFactory.sourceURL(script, path);
 
         System.out.println("parsing text " + url);
         

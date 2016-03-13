@@ -10,18 +10,18 @@ import java.util.Map;
 /**
  * Created by cmeier on 2/28/16.
  */
-class Builder
+public class Builder
 {
 
     final DirectoryStructure directory;
 
-    final Script script;
+    public final Script script;
 
     final Writer writer;
 
     final Map<String, String> breadCrumbs;
 
-    final String path;
+    public final String path;
 
     final boolean isSubdir;
 
@@ -30,7 +30,7 @@ class Builder
         this(directory, script, writer, path, null);
     }
 
-    Builder(DirectoryStructure directory, Script script, Writer writer, String path, String url) throws IOException {
+    public Builder(DirectoryStructure directory, Script script, Writer writer, String path, String url) throws IOException {
         this.url = url;
         if (url == null) {
             this.isSubdir = directory.fileOf(path) == null;
@@ -46,7 +46,7 @@ class Builder
         else {
             this.isSubdir = false;
             this.path = path;
-            this.breadCrumbs = directory.breadCrumbs(script, this.path);//.replaceFirst("[^/]+$", ""));
+            this.breadCrumbs = directory.breadCrumbs(script, this.path);
         }
         this.directory = directory;
         this.script = script;
@@ -63,6 +63,7 @@ class Builder
     public Builder buildSubdir() throws IOException {
         startHtmlBody();
         appendNavigation("/index.html");
+        appendImpressum();
         endBodyHtml();
         return this;
     }
@@ -70,6 +71,7 @@ class Builder
     public Builder buildLeafdir() throws IOException {
         startHtmlBody();
         appendNavigation(".html");
+        appendImpressum();
         endBodyHtml();
         return this;
     }
@@ -94,11 +96,33 @@ class Builder
         return this;
     }
 
+    public Builder startXmlBody() throws IOException {
+        writer.append("<?xml version=\"1.0\"?>\n").append("<document>\n<header>\n");
+
+        if (this.url != null) {
+            writer.append("<normativeSource>").append(url).append("</normativeSource>\n");
+        }
+        writer.append("<archivePath>").append("/").append(script.name).append(this.path).append(".xml</archivePath>\n");
+
+        appendTitle();
+
+        writer.append("\n</header>\n");
+
+        return this;
+    }
+
+    public Builder endXmlBody() throws IOException {
+        writer.append("\n</document>\n");
+
+        return this;
+    }
+
     public Builder startHtmlBody() throws IOException {
-        writer.append("<!doctype html>\n" +
+        writer.append("<!DOCTYPE HTML>\n" +
             "<html>\n" +
             "<head>\n" +
             "<link rel=\"stylesheet\" href=\"/").append(script.name).append("/style.css\">\n" +
+            "<link rel=\"stylesheet\" href=\"file:///Users/cmeier/projects/active/tipitaka/tipitaka-search/archive/").append(script.name).append("/style.css\">\n" +
             "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
         if (this.url != null) {
             writer.append("<meta name=\"normative-source\" content=\"").append(url).append("\" />\n");
@@ -109,6 +133,12 @@ class Builder
 
         writer.append("</head>\n<body>\n");
 
+        return this;
+    }
+
+    public Builder appendImpressum() throws IOException {
+
+        writer.append("<div class=\"impressum\"><a href=\"/impressum.html\">impressum</a></div>\n");
         return this;
     }
 
@@ -174,6 +204,10 @@ class Builder
 
         writer.append("</span>\n");
 
+        writer.append("<div class=\"extras\"><a target=\"_page\" href=\"http://blog.tipitaka.de\">blog</a>" +
+            "<a target=\"_page\" href=\"https://github.com/tipitaka-org/tipitaka-archive/tree/master/archive/data/")
+            .append(script.name).append(this.path).append(".xml")
+            .append("\">export as xml (experimental)<a href=\"\">original TEI format (pending)</a></div>\n");
 
         writer.append("\n</div>\n</div>\n");
 
@@ -182,5 +216,9 @@ class Builder
 
     public void flush() throws IOException {
         writer.flush();
+    }
+
+    public Writer append(CharSequence string) throws IOException {
+        return writer.append(string);
     }
 }

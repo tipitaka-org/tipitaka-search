@@ -60,8 +60,8 @@ public class TipitakaMirrorer {
     
 
     private void copy(String script, String path) throws IOException {
-        URL from = urlFactory .newURL(script, path);
-        URL to = mirrorFactory.newURL(script, path);
+        URL from = urlFactory .sourceURL(script, path);
+        URL to = mirrorFactory.sourceURL(script, path);
         File file = new File(to.getPath());
         file.getParentFile().mkdirs();
         InputStream in = null;

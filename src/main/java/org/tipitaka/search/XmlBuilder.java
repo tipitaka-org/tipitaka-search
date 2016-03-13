@@ -9,12 +9,6 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.URL;
 
-import org.tipitaka.search.DirectoryStructure;
-import org.tipitaka.search.Script;
-import org.tipitaka.search.ScriptFactory;
-import org.tipitaka.search.TipitakaPath;
-import org.tipitaka.search.TipitakaUrlFactory;
-
 public class XmlBuilder {
     
     private Writer writer;
@@ -32,7 +26,7 @@ public class XmlBuilder {
     }
     
     public void buildTei() throws IOException{
-        URL url = this.urlFactory.newURL(script.tipitakaOrgName, directory.fileOf(path.path.replace(".tei.xml", "")));
+        URL url = this.urlFactory.sourceURL(script.tipitakaOrgName, directory.fileOf(path.path.replace(".tei.xml", "")));
         System.out.println(url.toString());
         BufferedReader reader = null;
         try {

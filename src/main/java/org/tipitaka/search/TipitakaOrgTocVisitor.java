@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.tipitaka.search.TipitakaUrlFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -54,7 +53,7 @@ public class TipitakaOrgTocVisitor {
     
     protected void acceptPath(String script, String path) throws XmlPullParserException, IOException{
         XmlPullParser xpp = factory.newPullParser();
-        URL url = urlFactory.newURL(script, path);
+        URL url = urlFactory.sourceURL(script, path);
 
         System.out.println("parsing " + url);
         

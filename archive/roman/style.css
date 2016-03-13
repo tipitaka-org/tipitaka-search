@@ -8,16 +8,56 @@ p {
   padding-top: 0in; padding-bottom: 0in;
   margin-top: 0in; margin-bottom: 0.5cm;
 }
+
+div.impressum {
+    margin: 0.5em;
+    text-align: right;
+}
+
+a.line-number:visited {
+    color: green;
+}
+
+div.extras a {
+    font-size: 0.8em;
+    padding-right: 1em;
+    color: darkgreen;
+}
+div.extras {
+    position: fixed;
+    right: 0;
+}
+
+a.line-number {
+    color: green;
+    position: absolute;
+    left: 0;
+    width: 50%;
+    text-align: left;
+    text-indent: 0;
+    font-weight: initial;
+    font-size: 1em;
+    display: none;
+}
+
+p:hover a.line-number {
+    display: inline;
+}
+
 div.navigation span, span.context-toc {
     float: left;
+    padding-top: 1.1em;
     margin: 0.5em;
     margin-bottom: 1em;
 }
+
 div.navigation {
-    height: 10em;
+    height: 100%;
     overflow: scroll;
 }
+
 div.navigation-container {
+    height: 20%;
     float: left;
     position: fixed;
     top:0;
@@ -26,14 +66,16 @@ div.navigation-container {
     z-index: 500;
     width:100%;    
 }
+
 div.document-container {
     position:  fixed;
-    top: 11em;
-    height: 100%;
+    top: 20%;
+    height: 80%;
     width:100%;
     margin: 0;
     padding: 0;
 }
+
 div.document { 
     position: absolute; 
     overflow: auto;
