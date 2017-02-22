@@ -70,7 +70,7 @@
 
   <filter>
     <filter-name>GZipFilter</filter-name>
-    <filter-class>org.mortbay.servlet.GzipFilter</filter-class>
+    <filter-class>org.eclipse.jetty.servlets.GzipFilter</filter-class>
   </filter>
   
   <filter-mapping>
