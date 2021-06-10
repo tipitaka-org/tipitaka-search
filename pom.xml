@@ -43,7 +43,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <jetty.version>7.4.2.v20110526</jetty.version>
+    <jetty.version>9.4.41.v20210516</jetty.version>
     <mirror.dir>${basedir}/solr/tipitaka</mirror.dir>
     <script>romn,deva</script>
   </properties>
