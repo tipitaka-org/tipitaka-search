@@ -43,7 +43,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <jetty.version>7.4.2.v20110526</jetty.version>
+    <jetty.version>9.4.49.v20220914</jetty.version>
     <mirror.dir>${basedir}/solr/tipitaka</mirror.dir>
     <script>romn,deva</script>
   </properties>
@@ -64,9 +64,9 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.heroku</groupId>
-                  <artifactId>webapp-runner</artifactId>
-                  <version>9.0.52.1</version>
+		  <groupId>org.eclipse.jetty</groupId>
+                  <artifactId>jetty-runner</artifactId>
+                  <version>${jetty.version}</version>
                   <destFileName>webapp-runner.jar</destFileName>
                 </artifactItem>
               </artifactItems>
