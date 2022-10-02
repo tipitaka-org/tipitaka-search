@@ -19,7 +19,7 @@
 <ul class="pageitem">
 <li class="textbox">
   <form id="query-form" action="#{url_for_ios}" method="GET" name="googleform">
-    <div class="inputs">
+   <!-- <div class="inputs">
 <input style="font-size: 100%;" onclick="insertchar('&#257;') " value=" &#257; " type="button">&nbsp;&nbsp;
 <input style="font-size: 100%;" onclick="insertchar('&#7693;') " value=" &#7693; " type="button">&nbsp;&nbsp;
 <input style="font-size: 100%;" onclick="insertchar('&#299;') " value=" &#299; " type="button">&nbsp;&nbsp;
@@ -30,7 +30,11 @@
 <input style="font-size: 100%;" onclick="insertchar('&#241;') " value=" &#241; " type="button">&nbsp;&nbsp; 
 <input style="font-size: 100%;" onclick="insertchar('&#7789;') " value=" &#7789; " type="button">&nbsp;&nbsp; 
 <input style="font-size: 100%;" onclick="insertchar('&#363;') " value=" &#363; " type="button">&nbsp;&nbsp;
-<br/><br/>
+<li>Click on the buttons above to enter P&#257;&#7735;i characters into the search box below.</li>-->
+<ul>
+<li>Typing in the proper P&#257;&#7735;i characters is not necessary. Searching for vipassan&#257; or vipassana will produce the same results.</li>
+<li>To only search for part of a word use * to complete the search term. For example, searching for dhammacakka* will find all instances that start with dhammacakka.</li>
+</ul>
 <span #annTitle("Add the query using the &q= parameter")>Find: <input type="text" id="q" name="q" class="inputtext" value="$!esc.html($params.get('q'))"/> <input type="submit" id="querySubmit" class="submit"/></span>
   </div>
     #if($request.params.get('debugQuery'))

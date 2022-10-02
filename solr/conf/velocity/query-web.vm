@@ -17,7 +17,7 @@
 
       <div class="pagepath"> <a href="http://tipitaka.org">Home</a> &gt; Search</div>
       <h1 class="contenttitle">Tipitaka Search</h1>
-<p>
+<p><!--
       <table id="tablecenter"> 
         <tbody> 
           <tr> 
@@ -36,7 +36,12 @@
           </tr> 
         </tbody> 
       </table> 
-<br/>Click on the buttons above to enter P&#257;&#7735;i characters into the search box below.<br/><br/>
+<li>Click on the buttons above to enter P&#257;&#7735;i characters into the search box below.</li>-->
+<ul>
+<li>Typing in the proper P&#257;&#7735;i characters is not necessary. Searching for vipassan&#257; or vipassana will produce the same results.</li>
+<li>To only search for part of a word use * to complete the search term. For example, searching for dhammacakka* will find all instances that start with dhammacakka.</li>
+</ul>
+<br/>
   <form id="query-form" action="#{url_for_web}" method="GET" name="googleform">
     <div class="inputs">
       <span #annTitle("Add the query using the &q= parameter")>Find: <input type="text" id="q" name="q" class="inputtext" value="$!esc.html($params.get('q'))"/> <input type="submit" id="querySubmit"/></span>
