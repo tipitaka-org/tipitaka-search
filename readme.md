@@ -1,59 +1,21 @@
-setup and other commands
+Start local server
 ==========
 
-setup a clean clone
-----------
+Checkout the heroku git repo: https://git.heroku.com/pure-wildwood-66742.git
 
-     mvn -P setup -Dscript=romn
+To build the servdr jar:
+```
+mvn package
+```
+To execute the server run
+```
+java -jar target/dependency/webapp-runner.jar --port 8080 target/*.war
+```
 
-which will mirror a mirror of tipitkaka.org for the **romn** script and index them. the mirroring will look at the timestamps of the files and update only the changed ones but that needs to check the timestamp on the remote server too.
+The web interface runs on http://localhost:8080/solr/web
 
-     mvn -P setup
-     
-will do the some for all scripts - **takes a long time**.
+The template files for the web interface under https://github.com/tipitaka-org/tipitaka-search/tree/main/solr/conf/velocity
 
-the mirror will be located in directory __solr/tipitaka__. now you can run the server with
+See https://velocity.apache.org/ for details.
 
-     mvn -P jetty-run
-
-and access through
-    
-     http://localhost:8080/solr/web
-     http://localhost:8080/solr/ios
-     http://localhost:8080/solr/browse
-
-just run the indexer on the mirror
-------------
-
-     mvn -P index-run -Dscript=deva
-     
-or
-
-     mvn -P index-run
-
-create the directory structure for browsing
--------------
-
-     mvn -P directory-structure
-     
-create transcription table of the directory structure
------------
-
-     mvn -P directory-transcribe -Dscript=deva
-     
-or
-
-     mvn -P directory-transcribe
-     
-package the war archive
----------
-
-the war-archive for jetty6 with the name **tipitaka6.war**
-
-     mvn -P package6
-     
- and for jetty7 with the name **tipitaka.war** (not sure if that works because of the gzip filter)
- 
-     mvn package
-     
- either archive can be found inside the _target_ directory.
+Any changes on `main` github.org needs a PR and once OK on main, there needs to be a merge into the heroku branch which can be used to deploy it the changes into heroku.
