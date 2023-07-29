@@ -83,9 +83,9 @@ public class HtmlBuilder {
         if(css != null){
             writer.append("    <link rel=\"stylesheet\" href=\"").append(css).append("\" />\n");
         }
-        writer.append("    <link rel=\"stylesheet\" href=\"http://tipitaka.org/")
+        writer.append("    <link rel=\"stylesheet\" href=\"https://tipitaka.org/")
             .append(script.tipitakaOrgName).append("/cscd/tipitaka-").append("romn".equals(script.tipitakaOrgName)? "latn" : script.tipitakaOrgName).append(".css\" />\n");
-        writer.append("    <link rel=\"icon\" type=\"image/ico\" href=\"http://tipitaka.org/favicon.ico\" />\n");
+        writer.append("    <link rel=\"icon\" type=\"image/ico\" href=\"https://tipitaka.org/favicon.ico\" />\n");
         writer.append("  </head>\n" +
                 "  <body>\n");
         writer.flush();
@@ -125,7 +125,7 @@ public class HtmlBuilder {
                 "      |\n" +
                 "      <a href='").append(this.prefix).append("/").append(script.name).append(path).append(".tei.xml'>TEI format</a>\n" +
                 "      |\n" +
-                "      <a href='http://tipitaka.org/").append(script.tipitakaOrgName).append("/").append(file).append("'>page on tipitaka.org</a>\n" +
+                "      <a href='https://tipitaka.org/").append(script.tipitakaOrgName).append("/").append(file).append("'>page on tipitaka.org</a>\n" +
                 "    </div>\n");
         }
     }

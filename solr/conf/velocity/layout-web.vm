@@ -2,14 +2,14 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
 <head> 
-<link rel="icon" type="image/ico" href="http://tipitaka.org/favicon.ico">
+<link rel="icon" type="image/ico" href="https://tipitaka.org/favicon.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- Meta information for search engines -->
 <meta name="name" content="Tipitaka Search" />
 <meta name="description" content="Search the Tipitaka" />
 <!-- Site stylesheet (site colors and layout definitions) -->
-<link rel="stylesheet" media="screen" type="text/css" href="http://tipitaka.org/screen.css" />
-<link rel="stylesheet" media="print" type="text/css" href="http://tipitaka.org/print.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="https://tipitaka.org/screen.css" />
+<link rel="stylesheet" media="print" type="text/css" href="https://tipitaka.org/print.css" />
 <title>Tipitaka Search</title>
 
 <script language="javascript"> 
@@ -46,7 +46,7 @@ document.googleform.q.value=document.googleform.q.value+thechar; document.google
 <body> 
 <!-- Page header --> 
 <div id="header"><br />
-  &nbsp;&nbsp;&nbsp;<img src="http://tipitaka.org/images/aniwheel2.gif" /><a name="top" id="top"></a></div> 
+  &nbsp;&nbsp;&nbsp;<img src="https://tipitaka.org/images/aniwheel2.gif" /><a name="top" id="top"></a></div> 
 <div id="mainwrapper"> 
   <!-- Page content --> 
   <div id="container"> 
