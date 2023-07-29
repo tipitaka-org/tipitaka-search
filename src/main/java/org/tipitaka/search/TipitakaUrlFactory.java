@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class TipitakaUrlFactory {
 
-    public static final String TIPITAKA_ORG = "http://tipitaka.org";
+    public static final String TIPITAKA_ORG = "https://tipitaka.org";
 
     private final String baseUrl;
 
