@@ -19,3 +19,13 @@ The template files for the web interface under https://github.com/tipitaka-org/t
 See https://velocity.apache.org/ for details.
 
 Any changes on `main` github.org needs a PR and once OK on main, there needs to be a merge into the heroku branch which can be used to deploy it the changes into heroku.
+
+The deployment commands:
+```
+git checkout main
+git pull
+git checkout master
+git merge main
+git push
+```
+assuming the main branch is from github.org and master branch is from heroku git.
